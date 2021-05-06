@@ -1,0 +1,14 @@
+<html>
+	<head>
+		
+	</head>
+	<body>
+		<form method="post" accept-charset="utf-8">
+			{% csrf_token %}
+			<input type="text" name="inputan">
+			<button type="submit">submit</button>
+		</form>
+		<p>input:{{ input }}</p>
+		<p>output:{{ text }}</p>
+	</body>
+</html>
