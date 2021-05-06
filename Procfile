@@ -1,1 +1,1 @@
-web: gunicorn sistem-jibu.wsgi --log-file -
+web: gunicorn sistem.wsgi --log-file -
