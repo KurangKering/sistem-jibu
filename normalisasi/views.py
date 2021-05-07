@@ -38,4 +38,4 @@ def index(request):
         'text':text
     }
 
-    return render(request, 'normalisasi/index.html', content)
+    return render(request, 'layout.html', content)
