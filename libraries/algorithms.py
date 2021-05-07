@@ -106,6 +106,14 @@ class NGram:
     def get_freq(self, input_string, word):
         count = sum(1 for _ in re.finditer(r'\b%s\b' % re.escape(word), input_string))
         return count
+
+    def get_freq_nub(self, input_string, word):
+        word_len = len(word)
+        ouut = []
+        for i,c in enumerate(input_string):
+            ouut.append(input_string[i:i+word_len])
+
+        return sum(1 for x in ouut if x == word )
         
     def get_ngram_with_freq(self):
         out_lbigram = []

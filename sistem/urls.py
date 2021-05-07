@@ -16,10 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from normalisasi import views as normalisasi_views
-
+from . import views as sistem_views
 urlpatterns = [
+    path('', normalisasi_views.index, name="index"),
     path('admin/', admin.site.urls),
     path('normalisasi/', include('normalisasi.urls')),
-    path('', normalisasi_views.index, name="index"),
+    path('kosakata/', include('kosakata.urls')),
 
 ]

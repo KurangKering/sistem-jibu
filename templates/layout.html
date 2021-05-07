@@ -1,111 +1,114 @@
 {% load static %}
-
 <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Normalisasi Bahasa Makassar</title>
 
-  <!-- Google Font: Source Sans Pro -->
-  <style>
-    /* source-sans-pro-300 - latin */
-    @font-face {
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Normalisasi Bahasa Makassar</title>
+    <style>
+        @font-face {
       font-family: 'Source Sans Pro';
       font-style: normal;
       font-weight: 300;
-      src: url('{% static "fonts/source-sans-pro-v14-latin-300.eot" %}'); /* IE9 Compat Modes */
+      src: url('{% static "fonts/source-sans-pro-v14-latin-300.eot" %}'); 
       src: local(''),
-      url('{% static "fonts/source-sans-pro-v14-latin-300.eot?#iefix" %}') format('embedded-opentype'), /* IE6-IE8 */
-      url('{% static "fonts/source-sans-pro-v14-latin-300.woff2" %}') format('woff2'), /* Super Modern Browsers */
-      url('{% static "fonts/source-sans-pro-v14-latin-300.woff" %}') format('woff'), /* Modern Browsers */
-      url('{% static "fonts/source-sans-pro-v14-latin-300.ttf" %}') format('truetype'), /* Safari, Android, iOS */
-      url('{% static "fonts/source-sans-pro-v14-latin-300.svg#SourceSansPro" %}') format('svg'); /* Legacy iOS */
+      url('{% static "fonts/source-sans-pro-v14-latin-300.eot?#iefix" %}') format('embedded-opentype'), 
+      url('{% static "fonts/source-sans-pro-v14-latin-300.woff2" %}') format('woff2'), 
+      url('{% static "fonts/source-sans-pro-v14-latin-300.woff" %}') format('woff'), 
+      url('{% static "fonts/source-sans-pro-v14-latin-300.ttf" %}') format('truetype'), 
+      url('{% static "fonts/source-sans-pro-v14-latin-300.svg#SourceSansPro" %}') format('svg'); 
     }
-    /* source-sans-pro-regular - latin */
+    
     @font-face {
       font-family: 'Source Sans Pro';
       font-style: normal;
       font-weight: 400;
-      src: url('{% static "fonts/source-sans-pro-v14-latin-regular.eot" %}'); /* IE9 Compat Modes */
+      src: url('{% static "fonts/source-sans-pro-v14-latin-regular.eot" %}'); 
       src: local(''),
-      url('{% static "fonts/source-sans-pro-v14-latin-regular.eot?#iefix" %}') format('embedded-opentype'), /* IE6-IE8 */
-      url('{% static "fonts/source-sans-pro-v14-latin-regular.woff2" %}') format('woff2'), /* Super Modern Browsers */
-      url('{% static "fonts/source-sans-pro-v14-latin-regular.woff" %}') format('woff'), /* Modern Browsers */
-      url('{% static "fonts/source-sans-pro-v14-latin-regular.ttf" %}') format('truetype'), /* Safari, Android, iOS */
-      url('{% static "fonts/source-sans-pro-v14-latin-regular.svg#SourceSansPro" %}') format('svg'); /* Legacy iOS */
+      url('{% static "fonts/source-sans-pro-v14-latin-regular.eot?#iefix" %}') format('embedded-opentype'), 
+      url('{% static "fonts/source-sans-pro-v14-latin-regular.woff2" %}') format('woff2'), 
+      url('{% static "fonts/source-sans-pro-v14-latin-regular.woff" %}') format('woff'), 
+      url('{% static "fonts/source-sans-pro-v14-latin-regular.ttf" %}') format('truetype'), 
+      url('{% static "fonts/source-sans-pro-v14-latin-regular.svg#SourceSansPro" %}') format('svg'); 
     }
-    /* source-sans-pro-italic - latin */
+    
     @font-face {
       font-family: 'Source Sans Pro';
       font-style: italic;
       font-weight: 400;
-      src: url('{% static "fonts/source-sans-pro-v14-latin-italic.eot" %}'); /* IE9 Compat Modes */
+      src: url('{% static "fonts/source-sans-pro-v14-latin-italic.eot" %}'); 
       src: local(''),
-      url('{% static "fonts/source-sans-pro-v14-latin-italic.eot?#iefix" %}') format('embedded-opentype'), /* IE6-IE8 */
-      url('{% static "fonts/source-sans-pro-v14-latin-italic.woff2" %}') format('woff2'), /* Super Modern Browsers */
-      url('{% static "fonts/source-sans-pro-v14-latin-italic.woff" %}') format('woff'), /* Modern Browsers */
-      url('{% static "fonts/source-sans-pro-v14-latin-italic.ttf" %}') format('truetype'), /* Safari, Android, iOS */
-      url('{% static "fonts/source-sans-pro-v14-latin-italic.svg#SourceSansPro" %}') format('svg'); /* Legacy iOS */
+      url('{% static "fonts/source-sans-pro-v14-latin-italic.eot?#iefix" %}') format('embedded-opentype'), 
+      url('{% static "fonts/source-sans-pro-v14-latin-italic.woff2" %}') format('woff2'), 
+      url('{% static "fonts/source-sans-pro-v14-latin-italic.woff" %}') format('woff'), 
+      url('{% static "fonts/source-sans-pro-v14-latin-italic.ttf" %}') format('truetype'), 
+      url('{% static "fonts/source-sans-pro-v14-latin-italic.svg#SourceSansPro" %}') format('svg'); 
     }
-    /* source-sans-pro-700 - latin */
     @font-face {
       font-family: 'Source Sans Pro';
       font-style: normal;
       font-weight: 700;
-      src: url('{% static "fonts/source-sans-pro-v14-latin-700.eot" %}'); /* IE9 Compat Modes */
+      src: url('{% static "fonts/source-sans-pro-v14-latin-700.eot" %}'); 
       src: local(''),
-      url('{% static "fonts/source-sans-pro-v14-latin-700.eot?#iefix" %}') format('embedded-opentype'), /* IE6-IE8 */
-      url('{% static "fonts/source-sans-pro-v14-latin-700.woff2" %}') format('woff2'), /* Super Modern Browsers */
-      url('{% static "fonts/source-sans-pro-v14-latin-700.woff" %}') format('woff'), /* Modern Browsers */
-      url('{% static "fonts/source-sans-pro-v14-latin-700.ttf" %}') format('truetype'), /* Safari, Android, iOS */
-      url('{% static "fonts/source-sans-pro-v14-latin-700.svg#SourceSansPro" %}') format('svg'); /* Legacy iOS */
+      url('{% static "fonts/source-sans-pro-v14-latin-700.eot?#iefix" %}') format('embedded-opentype'), 
+      url('{% static "fonts/source-sans-pro-v14-latin-700.woff2" %}') format('woff2'), 
+      url('{% static "fonts/source-sans-pro-v14-latin-700.woff" %}') format('woff'), 
+      url('{% static "fonts/source-sans-pro-v14-latin-700.ttf" %}') format('truetype'), 
+      url('{% static "fonts/source-sans-pro-v14-latin-700.svg#SourceSansPro" %}') format('svg'); 
     }
   </style>
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
-
-  <style>
-    .modify-me {
-      text-align: center;
-      margin-top: 20px
-    }
-  </style>
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
 </head>
+
 <body class="hold-transition layout-top-nav">
-  <div class="wrapper">
-
-    <h1 class="modify-me">THIS SITE IS UNDER CONSTRUCTION</h1>
-    <!-- Navbar -->
-
-    <!-- /.navbar -->
-
-    <!-- Content Wrapper. Contains page content -->
-
-    <!-- /.content-wrapper -->
-
-    <!-- Control Sidebar -->
-
-    <!-- /.control-sidebar -->
-
-  </div>
-  <!-- ./wrapper -->
-
-  <!-- REQUIRED SCRIPTS -->
-
-  <!-- jQuery -->
-  <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
-  <!-- Bootstrap 4 -->
-  <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-  <!-- AdminLTE App -->
-  <script src="{% static 'dist/js/adminlte.min.js' %}"></script>
-  <!-- AdminLTE for demo purposes -->
-  <script src="{% static 'dist/js/demo.js' %}"></script>
+    <div class="wrapper">
+        <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
+            <div class="container">
+                <a href="#" class="navbar-brand">
+                    <img src="{% static 'dist/img/AdminLTELogo.png' %}" alt="Norm Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                    <span class="brand-text font-weight-light">Normalisasi</span>
+                </a>
+                <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="{% url 'index' %}" class="nav-link">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'kosakata/index' %}" class="nav-link">Kosakata</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'normalisasi/index' %}" class="nav-link">Normalisasi</a>
+                        </li>
+                        
+                    </ul>
+                    
+                </div>
+                
+            </div>
+        </nav>
+        <div class="content-wrapper">
+          {% block content %}
+              
+          {% endblock content %}
+        </div>
+        <aside class="control-sidebar control-sidebar-dark">
+        </aside>
+        <footer class="main-footer">
+            <div class="float-right d-none d-sm-inline">
+                Anything you want
+            </div>
+            <strong>Made with love</strong>.
+        </footer>
+    </div>
+    <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'dist/js/adminlte.min.js' %}"></script>
+    <script src="{% static 'dist/js/demo.js' %}"></script>
 </body>
+
 </html>
