@@ -1,7 +1,11 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-
+<style>
+	.scrollme {
+		overflow-x: auto;
+	}
+</style>
 <div class="content-header">
 	<div class="container">
 		<div class="row mb-2">
@@ -72,58 +76,53 @@
 					<div class="card-header">
 						<h3 class="card-title">Hasil damerau</h3>
 					</div>
-					<div class="card-body">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Kata</th>
+								<th>C</th>
+								<th>Damerau</th>
+							</tr>
+						</thead>
+						<tbody class="table">
+							{% for input, damerau,jumlah in inputan_damerau %}
+							<tr>
+								<td 
+								{% if jumlah != 1 %}
+								rowspan="{{ jumlah }}"
+								{% else %}
+								rowspan="2"
 
-						<table class="table">
-							<thead>
+								{% endif %}
+								>{{ input }}</td>
+								{% for dam,val in damerau.items %}
 								<tr>
-									<th>Kata</th>
-									<th>C</th>
-									<th>Damerau</th>
+									<td>{{ dam }}</td>
+									<td>{{ val }}</td>	
 								</tr>
-							</thead>
-							<tbody class="table">
-								{% for input, damerau,jumlah in inputan_damerau %}
+								{% empty%}
 								<tr>
-									<td 
-									{% if jumlah != 1 %}
-									rowspan="{{ jumlah }}"
-									{% else %}
-									rowspan="2"
-
-									{% endif %}
-									>{{ input }}</td>
-									{% for dam,val in damerau.items %}
-									<tr>
-										<td>{{ dam }}</td>
-										<td>{{ val }}</td>	
-									</tr>
-									{% empty%}
-									<tr>
-										<td>-</td>
-										<td>-</td>
-									</tr>
-									{% endfor %}
-									
-									
+									<td>-</td>
+									<td>-</td>
 								</tr>
 								{% endfor %}
-								
 
-								
-								
-								
-							</tbody>
-						</table>
-						
-					</div>
+
+							</tr>
+							{% endfor %}
+
+
+
+
+
+						</tbody>
+					</table>
 				</div>
 				<div class="card card-success">
 					<div class="card-header">
 						<h3 class="card-title">Probability & Score</h3>
 					</div>
-					<div class="card-body">
-
+					<div class="table-responsive">
 						<table class="table">
 							<thead>
 								<tr>
@@ -173,18 +172,17 @@
 										<td>-</td>
 									</tr>
 									{% endfor %}
-									
-									
+
+
 								</tr>
 								{% endfor %}
-								
 
-								
-								
-								
+
+
+
+
 							</tbody>
 						</table>
-						
 					</div>
 				</div>
 				
