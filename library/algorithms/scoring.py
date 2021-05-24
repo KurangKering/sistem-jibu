@@ -6,7 +6,7 @@ class BasicScoring:
         output = self.get_output(C, score)
         return (score, output)
         
-    def calculate(self, C, probability, lambda_gram = (0.25, 0.25, 0.5)):
+    def calculate(self, C, probability, lambda_gram):
         
         prob_lbigram, prob_rbigram, prob_trigram = probability
         lambda_lbigram, lambda_rbigram, lambda_trigram = lambda_gram

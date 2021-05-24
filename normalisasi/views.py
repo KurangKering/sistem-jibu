@@ -21,10 +21,10 @@ def normalize(request):
     if raw_inputan == "":
         return redirect(index)
 
-    cleaned_sentence = Preprocessing(raw_inputan)
+    preprocessed_object = Preprocessing(raw_inputan)
     factory = NormalisasiFactory()
     normalizer = factory.create_basic_normalizer(DefaultDictionary())
-    hasil_normalisasi = normalizer.normalisasi(cleaned_sentence.get_character_cleaned())
+    hasil_normalisasi = normalizer.normalisasi(preprocessed_object.get_cleaned_sentence())
 
     hasil_damerau = hasil_normalisasi.get_C_number()
     jumlah_damerau = [len(x)+1 for x in hasil_damerau]

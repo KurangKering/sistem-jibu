@@ -3,11 +3,11 @@ import textdistance
 class DamerauLevenshtein:
     
     _dict = None
-    _max_op = 5
+    _max_op = 1
     
-    def execute(self, dictionary, sentences):
+    def execute(self, dictionary, sentence):
         self._dict = dictionary
-        result = self.process(sentences)
+        result = self.process(sentence)
         return result
         
     def process(self, text):
