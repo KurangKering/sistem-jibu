@@ -14,3 +14,8 @@ def get_words(kamus=1):
         dictionaryContent = f.read()
 
     return dictionaryContent.split('\n')
+
+
+def detect_db_vendor():
+    from django.db import connection
+    return connection.vendor

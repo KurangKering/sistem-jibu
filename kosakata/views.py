@@ -100,7 +100,15 @@ def import_kosakata(request):
         if request.POST.get('delete_all_data') == 'on':
             Kosakata.objects.all().delete()
             table_name = Kosakata.objects.model._meta.db_table
-            sql = "DELETE FROM SQLite_sequence WHERE name='{}';".format(table_name)
+
+            sql = ""
+            if (connection.vendor == 'sqlite'):
+                sql = "DELETE FROM SQLite_sequence WHERE name='{}';".format(table_name)
+            elif (connection.vendor == 'postgresql'):
+                sequence = f"{table_name}_id_seq"
+                sql = "ALTER SEQUENCE {} RESTART WITH 1;".format(sequence)
+
+
             with connection.cursor() as cursor:
                 cursor.execute(sql)
                 row = cursor.fetchone()
