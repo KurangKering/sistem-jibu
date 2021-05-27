@@ -102,6 +102,8 @@ def import_kosakata(request):
             table_name = Kosakata.objects.model._meta.db_table
 
             sql = ""
+            import pdb; pdb.set_trace()
+
             if (connection.vendor == 'sqlite'):
                 sql = "DELETE FROM SQLite_sequence WHERE name='{}';".format(table_name)
             elif (connection.vendor == 'postgresql'):
