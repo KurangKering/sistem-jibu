@@ -107,7 +107,6 @@ def import_kosakata(request):
                 sql = "DELETE FROM SQLite_sequence WHERE name='{}';".format(table_name)
             elif (connection.vendor == 'postgresql'):
                 sequence = f"{table_name}_id_seq"
-                print(sequence)
                 sql = "ALTER SEQUENCE {} RESTART WITH 1;".format(sequence)
 
 

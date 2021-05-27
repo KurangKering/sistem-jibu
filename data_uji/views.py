@@ -109,7 +109,6 @@ def import_data_uji(request):
 
             with connection.cursor() as cursor:
                 cursor.execute(sql)
-                row = cursor.fetchone()
 
         data_uji_resource.import_data(dataset, dry_run=False)
         context = {
