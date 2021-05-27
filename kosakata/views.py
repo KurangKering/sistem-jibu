@@ -110,11 +110,9 @@ def import_kosakata(request):
                 print(sequence)
                 sql = "ALTER SEQUENCE {} RESTART WITH 1;".format(sequence)
 
-            print(sql)
 
             with connection.cursor() as cursor:
                 cursor.execute(sql)
-                row = cursor.fetchone()
 
         kosakata_resource.import_data(dataset, dry_run=False)
         context = {
