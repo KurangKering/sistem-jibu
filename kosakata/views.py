@@ -91,7 +91,7 @@ def json_single_kosakata(request):
 
 def import_kosakata(request):
     kosakata_resource = KosakataResource()
-    dataset = tablib.Dataset()
+    dataset = Dataset()
     file = request.FILES['file']
     imported_kosakata = dataset.load(file.read())
     result = kosakata_resource.import_data(dataset, dry_run=True)
