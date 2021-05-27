@@ -1,40 +1,39 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
-from .models import Kosakata
+from .models import DataUji
 from django.core import serializers
-from .forms import KosakataForm
+from .forms import DataUjiForm
 from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
 from tablib import Dataset
-from .resources import KosakataResource
+from .resources import DataUjiResource
 from django.db import connection
-
 # Create your views here.
 
 def index(request):
-    return render(request, 'kosakata/index.html')
+    return render(request, 'data_uji/index.html')
 
 
 def menu_import(request):
 
-    kosakata_list = Kosakata.objects.all()
-    total_data = len(kosakata_list)
+    data_uji_list = DataUji.objects.all()
+    total_data = len(data_uji_list)
     context = {
         'total_data': total_data
     }
-    return render(request, 'kosakata/menu_import.html', context)
+    return render(request, 'data_uji/menu_import.html', context)
 
-def insert_kosakata(request):
+def insert_data_uji(request):
 
-    form = KosakataForm(request.POST)
+    form = DataUjiForm(request.POST)
     data = {}
     context = {'success': True}
     if form.is_valid():
         data = form.cleaned_data
-        kosakata = Kosakata()
-        kosakata.kata = data['kata']
-        kosakata.arti_kata = data['arti_kata']
-        kosakata.save()
+        data_uji = DataUji()
+        data_uji.raw_data = data['raw_data']
+        data_uji.cleaned_data = ''
+        data_uji.save()
        
     else:
         errors = form.errors
@@ -45,17 +44,16 @@ def insert_kosakata(request):
 
     return JsonResponse(context, safe=False)
 
-def update_kosakata(request):
+def update_data_uji(request):
 
-    form = KosakataForm(request.POST)
+    form = DataUjiForm(request.POST)
     data = {}
     context = {'success': True}
     if form.is_valid():
         data = form.cleaned_data
-        kosakata = Kosakata.objects.get(pk=request.POST.get('id'))
-        kosakata.kata = data['kata']
-        kosakata.arti_kata = data['arti_kata']
-        kosakata.save()
+        data_uji = DataUji.objects.get(pk=request.POST.get('id'))
+        data_uji.raw_data = data['raw_data']
+        data_uji.save()
        
     else:
         errors = form.errors
@@ -68,10 +66,10 @@ def update_kosakata(request):
 
 
 @csrf_exempt
-def delete_kosakata(request):
-    id_kosakata = request.POST.get('id')
-    kosakata = Kosakata.objects.get(pk=id_kosakata)
-    kosakata.delete()
+def delete_data_uji(request):
+    id_data_uji = request.POST.get('id')
+    data_uji = DataUji.objects.get(pk=id_data_uji)
+    data_uji.delete()
     context = {
         'success': True,
         'msg': 'data successfully deleted'
@@ -80,32 +78,32 @@ def delete_kosakata(request):
     return JsonResponse(context, safe=False)
 
 @csrf_exempt
-def json_single_kosakata(request):
-    id_kosakata = request.POST.get('id')
-    if (id_kosakata == None or id_kosakata == ''):
+def json_single_data_uji(request):
+    id_data_uji = request.POST.get('id')
+    if (id_data_uji == None or id_data_uji == ''):
         return JsonResponse({'errors': ['id tidak boleh kosong']}, safe=False)
 
-    kosakata = Kosakata.objects.get(pk=id_kosakata)
-    serial = model_to_dict(kosakata)    
+    data_uji = DataUji.objects.get(pk=id_data_uji)
+    serial = model_to_dict(data_uji)    
     return JsonResponse(serial, safe=False)
 
-def import_kosakata(request):
-    kosakata_resource = KosakataResource()
-    dataset = tablib.Dataset()
+def import_data_uji(request):
+    data_uji_resource = DataUjiResource()
+    dataset = Dataset()
     file = request.FILES['file']
-    imported_kosakata = dataset.load(file.read())
-    result = kosakata_resource.import_data(dataset, dry_run=True)
+    imported_data_uji = dataset.load(file.read())
+    result = data_uji_resource.import_data(dataset, dry_run=True)
 
     if not result.has_errors():
         if request.POST.get('delete_all_data') == 'on':
-            Kosakata.objects.all().delete()
-            table_name = Kosakata.objects.model._meta.db_table
+            DataUji.objects.all().delete()
+            table_name = DataUji.objects.model._meta.db_table
             sql = "DELETE FROM SQLite_sequence WHERE name='{}';".format(table_name)
             with connection.cursor() as cursor:
                 cursor.execute(sql)
                 row = cursor.fetchone()
 
-        kosakata_resource.import_data(dataset, dry_run=False)
+        data_uji_resource.import_data(dataset, dry_run=False)
         context = {
             'success': True
         }
@@ -116,12 +114,12 @@ def import_kosakata(request):
 
     return JsonResponse(context, safe=False)
 
-def json_kosakata(request):
-    kosakata = Kosakata.objects.all().values()
-    kosakata_list = []
-    if (len(kosakata) > 0):
-        kosakata_list = list(kosakata)
+def json_data_uji(request):
+    data_uji = DataUji.objects.all().values()
+    data_uji_list = []
+    if (len(data_uji) > 0):
+        data_uji_list = list(data_uji)
 
 
-    return JsonResponse(kosakata_list, safe=False)
+    return JsonResponse(data_uji_list, safe=False)
 

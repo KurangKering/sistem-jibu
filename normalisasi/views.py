@@ -2,10 +2,10 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
 from django.contrib import messages
 from django.contrib.messages import get_messages
-
+from kosakata.models import Kosakata
 from library.algorithms.cleaner import Preprocessing
 from library.algorithms.factory import NormalisasiFactory
-from library.algorithms.dictionary import DefaultDictionary
+from library.algorithms.dictionary import DefaultDictionary, DatabaseDictionary
 
 # from old_libraries.algorithms import *
 
@@ -23,7 +23,7 @@ def normalize(request):
 
     preprocessed_object = Preprocessing(raw_inputan)
     factory = NormalisasiFactory()
-    normalizer = factory.create_basic_normalizer(DefaultDictionary())
+    normalizer = factory.create_basic_normalizer(DatabaseDictionary(Kosakata, 'kata'))
     hasil_normalisasi = normalizer.normalisasi(preprocessed_object.get_cleaned_sentence())
 
     hasil_damerau = hasil_normalisasi.get_C_number()

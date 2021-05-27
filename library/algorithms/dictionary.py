@@ -28,3 +28,12 @@ class DefaultDictionary(object):
         if not word or word.strip() == '':
             return
         self.words.append(word)
+
+class DatabaseDictionary(object):
+
+    def __init__(self, model, field):
+        self.words = model.objects.values_list(field, flat=True)
+
+    def as_list(self):
+        return self.words
+

@@ -3,7 +3,7 @@
 {% block import-css %}
 <style>
 	
-	#kosakata_table tr th:last-child, #kosakata_table tr td:last-child{
+	#data_uji_table tr th:last-child, #data_uji_table tr td:last-child{
 		white-space: nowrap;
 		width: 1%;
 	}
@@ -16,10 +16,10 @@
 		<div class="container-fluid">
 			<div class="row mb-2">
 				<div class="col-sm-6">
-					<h1>Daftar Kamus</h1>
+					<h1>Daftar Data Uji</h1>
 				</div>
 				<div class="col-sm-6">
-					<button type="button" id="show_modal_insert" class="btn btn-primary float-right">Tambah Kamus</button>
+					<button type="button" id="show_modal_insert" class="btn btn-primary float-right">Tambah Data Uji</button>
 				</div>
 
 			</div>
@@ -31,16 +31,14 @@
 				<div class="col-lg-12">
 					<div class="card card-info">
 						<div class="card-body">
-							<table id="kosakata_table" class="table table-bordered table-hover">
+							<table id="data_uji_table" class="table table-bordered table-hover">
 								<thead>
 									<tr>
 										<th>Id</th>
-										<th>Kata</th>
-										<th>Arti kata</th>
+										<th>Raw data</th>
 										<th>Action</th>
 									</tr>
 								</thead>
-								
 							</table>
 						</div>
 					</div>
@@ -49,33 +47,27 @@
 		</div>
 	</div>
 </div>
-<div class="modal fade" id="kosakata_modal">
+<div class="modal fade" id="data_uji_modal">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title">Tambah Data Kamus</h4>
+				<h4 class="modal-title">Tambah Data Uji</h4>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<form id="kosakata_form" method="POST">
+			<form id="data_uji_form" method="POST">
 				{% csrf_token %}
 				<input type="hidden" name="id" id="id" value="">
 				<div class="modal-body">
 					
 					<div class="form-group">
-						<label for="kata">Kata</label>
-						<input type="text" required class="form-control" id="kata" name="kata" >
+						<label for="raw_data">Kalimat</label>
+						<textarea required name="raw_data" id="raw_data"  class="form-control"></textarea>
 					</div>
-					<div class="form-group">
-						<label for="arti_kata">Arti Kata</label>
-						<input type="text" required class="form-control" id="arti_kata" name="arti_kata">
-					</div>
-
-					<div class="form-group">
+					<div class="form-group" id="wrapper_show_button">
 						<button class="btn btn-info" id="show_import_modal">Import From File</button>
 					</div>
-
 				</div>
 				<div class="modal-footer justify-content-between">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -87,12 +79,11 @@
 	</div>
 	<!-- /.modal-dialog -->
 </div>
-
 <div class="modal fade" id="import_modal">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title">Import Data Kosakata</h4>
+				<h4 class="modal-title">Import Data Uji</h4>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -129,57 +120,60 @@
 
 	$(document).ready(function() {
 
-
 		$(document).on('click', 'button#show_modal_insert', function() {
-			$("#kosakata_modal").modal('show');
+			$("#data_uji_modal .modal-title").text('Tambah Data Uji');
+			clean_data_uji_form();
+			$("#wrapper_show_button").show();
+			$("#data_uji_modal").modal('show');
 		});
 
 
 		$(document).on('click', 'button.show_modal_edit', function(e) {
-			var id_kosakata = $(this).data('id');
+			var id_data_uji = $(this).data('id');
 			$.ajax({
-				url: "{% url 'kosakata/json_single_kosakata' %}",
+				url: "{% url 'data_uji/json_single_data_uji' %}",
 				type: 'POST',
 				dataType: 'json',
-				data: {id: id_kosakata},
+				data: {id: id_data_uji},
 			})
 			.done(function(response) {
 
 				$("input#id").val(response.id);
-				$("input#kata").val(response.kata);
-				$("input#arti_kata").val(response.arti_kata);
-
-				$("#kosakata_modal").modal('show');
+				$("textarea#raw_data").val(response.raw_data);
+				$("#data_uji_modal .modal-title").text('Ubah Data Uji');
+				$("#wrapper_show_button").hide();
+				$("#data_uji_modal").modal('show');
 			});
 
 		});
 
 
 		$(document).on('click', 'button.show_modal_delete', function(e) {
-			var id_kosakata = $(this).data('id');
+			var id_data_uji = $(this).data('id');
 			$.ajax({
 				type: "POST",
-				url: "{% url 'kosakata/delete_kosakata' %}",
+				url: "{% url 'data_uji/delete_data_uji' %}",
 				dataType: 'json',
-				data: {id : id_kosakata},
+				data: {id : id_data_uji},
 			})
 			.done(function(response) {
-				kamus_datatable.ajax.reload();
+				data_uji_datatable.ajax.reload();
 			})
 		});
 
 
 		$(document).on('click', 'button#show_import_modal', function(e) {
-			$("#kosakata_modal").modal('hide');
+			$("#data_uji_modal").modal('hide');
 			$("#import_modal").modal('show');
 		})
 
-		$(document).on('submit', 'form#kosakata_form', function(e) {
+
+		$(document).on('submit', 'form#data_uji_form', function(e) {
 			e.preventDefault();
 
 			var data = $(this).serialize();
-			var id_kosakata = $("input#id").val();
-			var url = generate_url(id_kosakata)
+			var id_data_uji = $("input#id").val();
+			url = generate_url(id_data_uji)
 			$.ajax({
 				type: "POST",
 				url: url,
@@ -189,19 +183,20 @@
 			.done(function(response) {
 				if (response.success == true) {
 
-					clean_kosakata_form();
-					$("#kosakata_modal").modal('hide');
-					kamus_datatable.ajax.reload();
+					clean_data_uji_form();
+					$("#data_uji_modal").modal('hide');
+					data_uji_datatable.ajax.reload();
 				}
 			});
 		})
+
 
 		$(document).on('submit', 'form#import_form', function(e) {
 			e.preventDefault();
 			alert('importing');
 			var data = new FormData(this);
 
-			var url = "{% url 'kosakata/import_kosakata' %}"
+			var url = "{% url 'data_uji/import_data_uji' %}"
 			$.ajax({
 				type: "POST",
 				url: url,
@@ -215,22 +210,21 @@
 				if (response.success == true) {
 					$("#import_modal").modal('hide');
 					$("input#file").val('');
-					kamus_datatable.ajax.reload();
+					data_uji_datatable.ajax.reload();
 				}
 				alert('done');
 			});
 		})
 
 
-		kamus_datatable = $("#kosakata_table").DataTable({
+		data_uji_datatable = $("#data_uji_table").DataTable({
 			"ajax": {
-				"url": "{% url 'kosakata/json_kosakata' %}",
+				"url": "{% url 'data_uji/json_data_uji' %}",
 				"dataSrc": ""
 			},
 			"columns": [
 			{ "data": "id" },
-			{ "data": "kata" },
-			{ "data": "arti_kata" },
+			{ "data": "raw_data" },
 			{ "data": null },
 			],
 			"columnDefs": [ {
@@ -245,15 +239,14 @@
 	});
 
 
-	function clean_kosakata_form() {
+	function clean_data_uji_form() {
 		$("input#id").val('');
-		$("input#kata").val('');
-		$("input#arti_kata").val('');
+		$("textarea#raw_data").val('');
 	}
 	function generate_url(id) {
-		var url = "{% url 'kosakata/insert_kosakata' %}";
+		var url = "{% url 'data_uji/insert_data_uji' %}";
 		if (id) {
-			url = "{% url 'kosakata/update_kosakata' %}";
+			url = "{% url 'data_uji/update_data_uji' %}";
 		}
 		return url
 	}

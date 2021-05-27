@@ -22,5 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('normalisasi/', include('normalisasi.urls')),
     path('kosakata/', include('kosakata.urls')),
+    path('data_uji/', include('data_uji.urls')),
 
 ]

@@ -37,9 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'import_export',
     'django_extensions',
     'normalisasi',
-    'kosakata'
+    'kosakata',
+    'data_uji',
     
 ]
 
@@ -142,7 +144,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #
 ## Configure Django App for Heroku.
 
-
+IMPORT_EXPORT_USE_TRANSACTIONS = False
 
 import django_heroku
 django_heroku.settings(locals())
