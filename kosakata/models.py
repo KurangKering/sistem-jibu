@@ -5,6 +5,3 @@ from django.db import models
 class Kosakata(models.Model):
     kata = models.CharField(max_length=100)
     arti_kata = models.CharField(max_length=100, null=True, blank=True)
-
-    class Meta:
-        db_table = "_kosakata_kosakata"
