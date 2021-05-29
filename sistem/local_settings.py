@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'normalisasi',
     'kosakata',
     'data_uji',
+    'cleaning'
     
 ]
 

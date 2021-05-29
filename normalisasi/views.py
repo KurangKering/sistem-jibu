@@ -6,13 +6,36 @@ from kosakata.models import Kosakata
 from library.algorithms.cleaner import Preprocessing
 from library.algorithms.factory import NormalisasiFactory
 from library.algorithms.dictionary import DefaultDictionary, DatabaseDictionary
-
+from data_uji.models import DataUji
 # from old_libraries.algorithms import *
 
 # Create your views here.
 def index(request):
 
     return render(request, 'normalisasi/index.html')
+
+def perhitungan(request):
+    return render(request, 'normalisasi/perhitungan.html')
+
+def bulk_normalize(request):
+    cleaned_data = DataUji.objects.values_list()
+    normalized_data = []
+    factory = NormalisasiFactory()
+    normalizer = factory.create_basic_normalizer(DatabaseDictionary(Kosakata, 'kata'))
+
+
+
+    for x in (cleaned_data):
+        normalized = normalizer.normalisasi(x[2])
+        string_normalized = normalized.get_output_str()
+        normalized_data.append([x[0], x[2], string_normalized])
+
+    output = {
+        'success': True,
+        'normalized_data': normalized_data
+    }
+
+    return JsonResponse(output, safe=False)
 
 
 def normalize(request):

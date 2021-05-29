@@ -23,5 +23,6 @@ urlpatterns = [
     path('normalisasi/', include('normalisasi.urls')),
     path('kosakata/', include('kosakata.urls')),
     path('data_uji/', include('data_uji.urls')),
+    path('cleaning/', include('cleaning.urls')),
 
 ]

@@ -8,6 +8,7 @@ class DamerauLevenshtein:
     def execute(self, dictionary, sentence):
         self._dict = dictionary
         result = self.process(sentence)
+        print(result)
         return result
         
     def process(self, text):
@@ -49,3 +50,7 @@ class DamerauLevenshtein:
         damerau = textdistance.DamerauLevenshtein()
         num = damerau(word1, word2)
         return num
+
+
+class CachedDamerauLevenshtein(DamerauLevenshtein):
+    pass
