@@ -16,7 +16,7 @@ class BasicNormalizer:
         prob = BasicProbability()
         scoring = BasicScoring()
         
-        self._normalizer = ImplementBasicNormalisasi(dictionary, damerau, ngram, prob, scoring)
+        self._normalizer = ImplementBasicNormalisasi(dictionary.as_list(), damerau, ngram, prob, scoring)
 
     def normalisasi(self, words):
         output = self._normalizer.normalisasi(words)

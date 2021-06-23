@@ -2,12 +2,12 @@
 {% load static %}
 {% block import-css %}
 <style>
-	
-	#data_uji_table tr th:last-child, #data_uji_table tr td:last-child{
-		white-space: nowrap;
-		width: 1%;
-	}
-	
+
+#data_uji_table tr th:last-child, #data_uji_table tr td:last-child{
+	white-space: nowrap;
+	width: 1%;
+}
+
 </style>
 {% endblock import-css %}
 {% block content %}
@@ -48,7 +48,7 @@
 	</div>
 </div>
 <div class="modal fade" id="data_uji_modal">
-	<div class="modal-dialog modal-lg">
+	<div class="modal-dialog modal-md">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title">Tambah Data Uji</h4>
@@ -56,31 +56,30 @@
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<form id="data_uji_form" method="POST">
-				{% csrf_token %}
-				<input type="hidden" name="id" id="id" value="">
-				<div class="modal-body">
-					
+			
+			<div class="modal-body">
+				<form id="data_uji_form" method="POST">
+					{% csrf_token %}
+					<input type="hidden" name="id" id="id" value="">
 					<div class="form-group">
 						<label for="raw_data">Kalimat</label>
 						<textarea required name="raw_data" id="raw_data"  class="form-control"></textarea>
 					</div>
-					<div class="form-group" id="wrapper_show_button">
-						<button class="btn btn-info" id="show_import_modal">Import From File</button>
+					<div class="text-center">
+						<button type="submit" class="btn btn-block btn-primary mb-3">Simpan Data</button>
+						<p>ATAU</p>
 					</div>
-				</div>
-				<div class="modal-footer justify-content-between">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<button type="submit" class="btn btn-primary">Simpan Data</button>
-				</div>
-			</form>
+				</form>
+				<button class="btn btn-info btn-block" id="show_import_modal">Import File Excel</button>
+			</div>
+			
 		</div>
 		<!-- /.modal-content -->
 	</div>
 	<!-- /.modal-dialog -->
 </div>
 <div class="modal fade" id="import_modal">
-	<div class="modal-dialog modal-lg">
+	<div class="modal-dialog modal-md">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title">Import Data Uji</h4>
@@ -118,143 +117,145 @@
 {% block import-js %}
 <script>
 
-	$(document).ready(function() {
+$(document).ready(function() {
 
-		$(document).on('click', 'button#show_modal_insert', function() {
-			$("#data_uji_modal .modal-title").text('Tambah Data Uji');
-			clean_data_uji_form();
-			$("#wrapper_show_button").show();
-			$("#data_uji_modal").modal('show');
-		});
-
-
-		$(document).on('click', 'button.show_modal_edit', function(e) {
-			var id_data_uji = $(this).data('id');
-			$.ajax({
-				url: "{% url 'data_uji/json_single_data_uji' %}",
-				type: 'POST',
-				dataType: 'json',
-				data: {id: id_data_uji},
-			})
-			.done(function(response) {
-
-				$("input#id").val(response.id);
-				$("textarea#raw_data").val(response.raw_data);
-				$("#data_uji_modal .modal-title").text('Ubah Data Uji');
-				$("#wrapper_show_button").hide();
-				$("#data_uji_modal").modal('show');
-			});
-
-		});
-
-
-		$(document).on('click', 'button.show_modal_delete', function(e) {
-			var id_data_uji = $(this).data('id');
-			$.ajax({
-				type: "POST",
-				url: "{% url 'data_uji/delete_data_uji' %}",
-				dataType: 'json',
-				data: {id : id_data_uji},
-			})
-			.done(function(response) {
-				data_uji_datatable.ajax.reload();
-			})
-		});
-
-
-		$(document).on('click', 'button#show_import_modal', function(e) {
-			$("#data_uji_modal").modal('hide');
-			$("#import_modal").modal('show');
-		})
-
-
-		$(document).on('submit', 'form#data_uji_form', function(e) {
-			e.preventDefault();
-
-			var data = $(this).serialize();
-			var id_data_uji = $("input#id").val();
-			url = generate_url(id_data_uji)
-			$.ajax({
-				type: "POST",
-				url: url,
-				dataType: 'json',
-				data: data,
-			})
-			.done(function(response) {
-				if (response.success == true) {
-
-					clean_data_uji_form();
-					$("#data_uji_modal").modal('hide');
-					data_uji_datatable.ajax.reload();
-				}
-			});
-		})
-
-
-		$(document).on('submit', 'form#import_form', function(e) {
-			e.preventDefault();
-			alert('importing');
-			var data = new FormData(this);
-
-			var url = "{% url 'data_uji/import_data_uji' %}"
-			$.ajax({
-				type: "POST",
-				url: url,
-				dataType: 'json',
-				data: data,
-				cache: false,
-				contentType: false,
-				processData: false
-			})
-			.done(function(response) {
-				if (response.success == true) {
-					$("#import_modal").modal('hide');
-					$("input#file").val('');
-					data_uji_datatable.ajax.reload();
-				}
-				alert('done');
-			});
-		})
-
-
-		data_uji_datatable = $("#data_uji_table").DataTable({
-			"ajax": {
-				"url": "{% url 'data_uji/json_data_uji' %}",
-				"dataSrc": ""
-			},
-			"columns": [
-			{ "data": "id" },
-			{ "data": "raw_data" },
-			{ "data": null },
-			],
-			"columnDefs": [ {
-				"targets": -1,
-				"data": null,
-				"render" : function(data, type, row) {
-					return render_edit_delete_button(row['id'])
-				}
-			} ]
-
-		});
+	$(document).on('click', 'button#show_modal_insert', function() {
+		$("#data_uji_modal .modal-title").text('Tambah Data Uji');
+		clean_data_uji_form();
+		$("#wrapper_show_button").show();
+		$("#data_uji_modal").modal('show');
 	});
 
 
-	function clean_data_uji_form() {
-		$("input#id").val('');
-		$("textarea#raw_data").val('');
+	$(document).on('click', 'button.show_modal_edit', function(e) {
+		var id_data_uji = $(this).data('id');
+		$.ajax({
+			url: "{% url 'data_uji/json_single_data_uji' %}",
+			type: 'POST',
+			dataType: 'json',
+			data: {id: id_data_uji},
+		})
+		.done(function(response) {
+
+			$("input#id").val(response.id);
+			$("textarea#raw_data").val(response.raw_data);
+			$("#data_uji_modal .modal-title").text('Ubah Data Uji');
+			$("#wrapper_show_button").hide();
+			$("#data_uji_modal").modal('show');
+		});
+
+	});
+
+
+	$(document).on('click', 'button.show_modal_delete', function(e) {
+		var id_data_uji = $(this).data('id');
+		$.ajax({
+			type: "POST",
+			url: "{% url 'data_uji/delete_data_uji' %}",
+			dataType: 'json',
+			data: {id : id_data_uji},
+		})
+		.done(function(response) {
+			data_uji_datatable.ajax.reload();
+		})
+	});
+
+
+	$(document).on('click', 'button#show_import_modal', function(e) {
+		$("#data_uji_modal").modal('hide');
+		$("#import_modal").modal('show');
+	})
+
+
+	$(document).on('submit', 'form#data_uji_form', function(e) {
+		e.preventDefault();
+
+		var data = $(this).serialize();
+		var id_data_uji = $("input#id").val();
+		url = generate_url(id_data_uji)
+		$.ajax({
+			type: "POST",
+			url: url,
+			dataType: 'json',
+			data: data,
+		})
+		.done(function(response) {
+			if (response.success == true) {
+
+				clean_data_uji_form();
+				$("#data_uji_modal").modal('hide');
+				data_uji_datatable.ajax.reload();
+			}
+		});
+	})
+
+
+	$(document).on('submit', 'form#import_form', function(e) {
+		showSpinner();
+		e.preventDefault();
+		var data = new FormData(this);
+
+		var url = "{% url 'data_uji/import_data_uji' %}"
+		$.ajax({
+			type: "POST",
+			url: url,
+			dataType: 'json',
+			data: data,
+			cache: false,
+			contentType: false,
+			processData: false
+		})
+		.done(function(response) {
+			if (response.success == true) {
+				$("#import_modal").modal('hide');
+				$("input#file").val('');
+				data_uji_datatable.ajax.reload();
+			}
+		})
+		.always(function() {
+			hideSpinner();
+		})
+	})
+
+
+	data_uji_datatable = $("#data_uji_table").DataTable({
+		"ajax": {
+			"url": "{% url 'data_uji/json_data_uji' %}",
+			"dataSrc": ""
+		},
+		"columns": [
+		{ "data": "id" },
+		{ "data": "raw_data" },
+		{ "data": null },
+		],
+		"columnDefs": [ {
+			"targets": -1,
+			"data": null,
+			"render" : function(data, type, row) {
+				return render_edit_delete_button(row['id'])
+			}
+		} ]
+
+	});
+});
+
+
+function clean_data_uji_form() {
+	$("input#id").val('');
+	$("textarea#raw_data").val('');
+}
+function generate_url(id) {
+	var url = "{% url 'data_uji/insert_data_uji' %}";
+	if (id) {
+		url = "{% url 'data_uji/update_data_uji' %}";
 	}
-	function generate_url(id) {
-		var url = "{% url 'data_uji/insert_data_uji' %}";
-		if (id) {
-			url = "{% url 'data_uji/update_data_uji' %}";
-		}
-		return url
-	}
-	function render_edit_delete_button(id) {
-		var button_edit = '<button type="button" class="show_modal_edit btn btn-warning" data-id="'+id+'">Edit</button>';
-		var button_delete = '<button type="button" class="show_modal_delete btn btn-danger" data-id="'+id+'">Delete</button>';
-		html = button_edit + " "+ button_delete;
-		return html
-	}
+	return url
+}
+function render_edit_delete_button(id) {
+	var button_edit = '<button type="button" class="show_modal_edit btn btn-warning" data-id="'+id+'">Edit</button>';
+	var button_delete = '<button type="button" class="show_modal_delete btn btn-danger" data-id="'+id+'">Delete</button>';
+	html = button_edit + " "+ button_delete;
+	return html
+}
 </script>
 {% endblock import-js %}

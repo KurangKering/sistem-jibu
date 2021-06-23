@@ -14,56 +14,56 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
   <!-- Google Font: Source Sans Pro -->
   <style>
-    @font-face {
-      font-family: 'Source Sans Pro';
-      font-style: normal;
-      font-weight: 300;
-      src: url('{% static "fonts/source-sans-pro-v14-latin-300.eot" %}'); 
-      src: local(''),
-      url('{% static "fonts/source-sans-pro-v14-latin-300.eot?#iefix" %}') format('embedded-opentype'), 
-      url('{% static "fonts/source-sans-pro-v14-latin-300.woff2" %}') format('woff2'), 
-      url('{% static "fonts/source-sans-pro-v14-latin-300.woff" %}') format('woff'), 
-      url('{% static "fonts/source-sans-pro-v14-latin-300.ttf" %}') format('truetype'), 
-      url('{% static "fonts/source-sans-pro-v14-latin-300.svg#SourceSansPro" %}') format('svg'); 
-    }
-    
-    @font-face {
-      font-family: 'Source Sans Pro';
-      font-style: normal;
-      font-weight: 400;
-      src: url('{% static "fonts/source-sans-pro-v14-latin-regular.eot" %}'); 
-      src: local(''),
-      url('{% static "fonts/source-sans-pro-v14-latin-regular.eot?#iefix" %}') format('embedded-opentype'), 
-      url('{% static "fonts/source-sans-pro-v14-latin-regular.woff2" %}') format('woff2'), 
-      url('{% static "fonts/source-sans-pro-v14-latin-regular.woff" %}') format('woff'), 
-      url('{% static "fonts/source-sans-pro-v14-latin-regular.ttf" %}') format('truetype'), 
-      url('{% static "fonts/source-sans-pro-v14-latin-regular.svg#SourceSansPro" %}') format('svg'); 
-    }
-    
-    @font-face {
-      font-family: 'Source Sans Pro';
-      font-style: italic;
-      font-weight: 400;
-      src: url('{% static "fonts/source-sans-pro-v14-latin-italic.eot" %}'); 
-      src: local(''),
-      url('{% static "fonts/source-sans-pro-v14-latin-italic.eot?#iefix" %}') format('embedded-opentype'), 
-      url('{% static "fonts/source-sans-pro-v14-latin-italic.woff2" %}') format('woff2'), 
-      url('{% static "fonts/source-sans-pro-v14-latin-italic.woff" %}') format('woff'), 
-      url('{% static "fonts/source-sans-pro-v14-latin-italic.ttf" %}') format('truetype'), 
-      url('{% static "fonts/source-sans-pro-v14-latin-italic.svg#SourceSansPro" %}') format('svg'); 
-    }
-    @font-face {
-      font-family: 'Source Sans Pro';
-      font-style: normal;
-      font-weight: 700;
-      src: url('{% static "fonts/source-sans-pro-v14-latin-700.eot" %}'); 
-      src: local(''),
-      url('{% static "fonts/source-sans-pro-v14-latin-700.eot?#iefix" %}') format('embedded-opentype'), 
-      url('{% static "fonts/source-sans-pro-v14-latin-700.woff2" %}') format('woff2'), 
-      url('{% static "fonts/source-sans-pro-v14-latin-700.woff" %}') format('woff'), 
-      url('{% static "fonts/source-sans-pro-v14-latin-700.ttf" %}') format('truetype'), 
-      url('{% static "fonts/source-sans-pro-v14-latin-700.svg#SourceSansPro" %}') format('svg'); 
-    }
+  @font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 300;
+    src: url('{% static "fonts/source-sans-pro-v14-latin-300.eot" %}'); 
+    src: local(''),
+    url('{% static "fonts/source-sans-pro-v14-latin-300.eot?#iefix" %}') format('embedded-opentype'), 
+    url('{% static "fonts/source-sans-pro-v14-latin-300.woff2" %}') format('woff2'), 
+    url('{% static "fonts/source-sans-pro-v14-latin-300.woff" %}') format('woff'), 
+    url('{% static "fonts/source-sans-pro-v14-latin-300.ttf" %}') format('truetype'), 
+    url('{% static "fonts/source-sans-pro-v14-latin-300.svg#SourceSansPro" %}') format('svg'); 
+  }
+
+  @font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 400;
+    src: url('{% static "fonts/source-sans-pro-v14-latin-regular.eot" %}'); 
+    src: local(''),
+    url('{% static "fonts/source-sans-pro-v14-latin-regular.eot?#iefix" %}') format('embedded-opentype'), 
+    url('{% static "fonts/source-sans-pro-v14-latin-regular.woff2" %}') format('woff2'), 
+    url('{% static "fonts/source-sans-pro-v14-latin-regular.woff" %}') format('woff'), 
+    url('{% static "fonts/source-sans-pro-v14-latin-regular.ttf" %}') format('truetype'), 
+    url('{% static "fonts/source-sans-pro-v14-latin-regular.svg#SourceSansPro" %}') format('svg'); 
+  }
+
+  @font-face {
+    font-family: 'Source Sans Pro';
+    font-style: italic;
+    font-weight: 400;
+    src: url('{% static "fonts/source-sans-pro-v14-latin-italic.eot" %}'); 
+    src: local(''),
+    url('{% static "fonts/source-sans-pro-v14-latin-italic.eot?#iefix" %}') format('embedded-opentype'), 
+    url('{% static "fonts/source-sans-pro-v14-latin-italic.woff2" %}') format('woff2'), 
+    url('{% static "fonts/source-sans-pro-v14-latin-italic.woff" %}') format('woff'), 
+    url('{% static "fonts/source-sans-pro-v14-latin-italic.ttf" %}') format('truetype'), 
+    url('{% static "fonts/source-sans-pro-v14-latin-italic.svg#SourceSansPro" %}') format('svg'); 
+  }
+  @font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 700;
+    src: url('{% static "fonts/source-sans-pro-v14-latin-700.eot" %}'); 
+    src: local(''),
+    url('{% static "fonts/source-sans-pro-v14-latin-700.eot?#iefix" %}') format('embedded-opentype'), 
+    url('{% static "fonts/source-sans-pro-v14-latin-700.woff2" %}') format('woff2'), 
+    url('{% static "fonts/source-sans-pro-v14-latin-700.woff" %}') format('woff'), 
+    url('{% static "fonts/source-sans-pro-v14-latin-700.ttf" %}') format('truetype'), 
+    url('{% static "fonts/source-sans-pro-v14-latin-700.svg#SourceSansPro" %}') format('svg'); 
+  }
   </style>
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
@@ -71,6 +71,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
   <link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
   <link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+  <link rel="stylesheet" href="{% static 'plugins/spinjs/spin.css' %}">
+
   {% block import-css %}
   
   {% endblock import-css %}
@@ -227,10 +229,68 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
 <script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
 <script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/spinjs/spin.umd.js' %}"></script>
+<script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
 {% block import-js %}
 
 {% endblock import-js %}
 <!-- AdminLTE App -->
 <script src="{% static 'dist/js/adminlte.min.js' %}"></script>
-</body>
-</html>
+
+<script>
+
+function showSpinner() {
+     // Initialize
+     if ($('.kintone-spinner').length == 0) {
+         // Create elements for the spinner and the background of the spinner
+         var spin_div = $('<div id ="kintone-spin" class="kintone-spinner"></div>');
+         var spin_bg_div = $('<div id ="kintone-spin-bg" class="kintone-spinner"></div>');
+
+         // Append spinner to the body
+         $(document.body).append(spin_div, spin_bg_div);
+
+         // Set a style for the spinner
+         $(spin_div).css({
+           'position': 'fixed',
+           'top': '50%',
+           'left': '50%',
+           'z-index': '5510',
+           'padding': '26px',
+           '-moz-border-radius': '4px',
+           '-webkit-border-radius': '4px',
+           'border-radius': '4px'
+         });
+         $(spin_bg_div).css({
+           'position': 'fixed',
+           'top': '0px',
+           'left': '0px',
+           'z-index': '5500',
+           'width': '100%',
+           'height': '200%',
+           'background-color': '#000',
+           'opacity': '0.5',
+           'filter': 'alpha(opacity=50)',
+           '-ms-filter': "alpha(opacity=50)"
+         });
+
+         // Set options for the spinner
+         var opts = {
+           'color': '#fff'
+         };
+
+         // Create the spinner
+         new Spin.Spinner(opts).spin(document.getElementById('kintone-spin'));
+       }
+
+     // Display the spinner
+     $('.kintone-spinner').show();
+   }
+
+ // Function to hide the spinner
+ function hideSpinner() {
+     // Hide the spinner
+     $('.kintone-spinner').hide();
+   }
+   </script>
+ </body>
+ </html>

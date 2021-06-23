@@ -2,12 +2,12 @@
 {% load static %}
 {% block import-css %}
 <style>
-	
-	#kosakata_table tr th:last-child, #kosakata_table tr td:last-child{
-		white-space: nowrap;
-		width: 1%;
-	}
-	
+
+#kosakata_table tr th:last-child, #kosakata_table tr td:last-child{
+	white-space: nowrap;
+	width: 1%;
+}
+
 </style>
 {% endblock import-css %}
 {% block content %}
@@ -50,7 +50,7 @@
 	</div>
 </div>
 <div class="modal fade" id="kosakata_modal">
-	<div class="modal-dialog modal-lg">
+	<div class="modal-dialog modal-md">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title">Tambah Data Kamus</h4>
@@ -58,11 +58,11 @@
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<form id="kosakata_form" method="POST">
-				{% csrf_token %}
-				<input type="hidden" name="id" id="id" value="">
-				<div class="modal-body">
-					
+			
+			<div class="modal-body">
+				<form id="kosakata_form" method="POST">
+					{% csrf_token %}
+					<input type="hidden" name="id" id="id" value="">
 					<div class="form-group">
 						<label for="kata">Kata</label>
 						<input type="text" required class="form-control" id="kata" name="kata" >
@@ -72,16 +72,14 @@
 						<input type="text" required class="form-control" id="arti_kata" name="arti_kata">
 					</div>
 
-					<div class="form-group">
-						<button class="btn btn-info" id="show_import_modal">Import From File</button>
+					<div class="text-center">
+						<button type="submit" class="btn btn-block btn-primary mb-3">Simpan Data</button>
+						<p>ATAU</p>
 					</div>
+				</form>
+				<button class="btn btn-info btn-block" id="show_import_modal">Import File Excel</button>
+			</div>
 
-				</div>
-				<div class="modal-footer justify-content-between">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<button type="submit" class="btn btn-primary">Simpan Data</button>
-				</div>
-			</form>
 		</div>
 		<!-- /.modal-content -->
 	</div>
@@ -89,7 +87,7 @@
 </div>
 
 <div class="modal fade" id="import_modal">
-	<div class="modal-dialog modal-lg">
+	<div class="modal-dialog modal-md">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title">Import Data Kosakata</h4>
@@ -127,141 +125,154 @@
 {% block import-js %}
 <script>
 
-	$(document).ready(function() {
+$(document).ready(function() {
 
 
-		$(document).on('click', 'button#show_modal_insert', function() {
+	$(document).on('click', 'button#show_modal_insert', function() {
+		clean_kosakata_form();
+		$("#kosakata_modal").modal('show');
+	});
+
+
+	$(document).on('click', 'button.show_modal_edit', function(e) {
+		showSpinner();
+		var id_kosakata = $(this).data('id');
+		$.ajax({
+			url: "{% url 'kosakata/json_single_kosakata' %}",
+			type: 'POST',
+			dataType: 'json',
+			data: {id: id_kosakata},
+		})
+		.done(function(response) {
+
+			$("input#id").val(response.id);
+			$("input#kata").val(response.kata);
+			$("input#arti_kata").val(response.arti_kata);
+
 			$("#kosakata_modal").modal('show');
+			hideSpinner();
 		});
 
-
-		$(document).on('click', 'button.show_modal_edit', function(e) {
-			var id_kosakata = $(this).data('id');
-			$.ajax({
-				url: "{% url 'kosakata/json_single_kosakata' %}",
-				type: 'POST',
-				dataType: 'json',
-				data: {id: id_kosakata},
-			})
-			.done(function(response) {
-
-				$("input#id").val(response.id);
-				$("input#kata").val(response.kata);
-				$("input#arti_kata").val(response.arti_kata);
-
-				$("#kosakata_modal").modal('show');
-			});
-
-		});
+	});
 
 
-		$(document).on('click', 'button.show_modal_delete', function(e) {
-			var id_kosakata = $(this).data('id');
-			$.ajax({
-				type: "POST",
-				url: "{% url 'kosakata/delete_kosakata' %}",
-				dataType: 'json',
-				data: {id : id_kosakata},
-			})
-			.done(function(response) {
+	$(document).on('click', 'button.show_modal_delete', function(e) {
+		var id_kosakata = $(this).data('id');
+		showSpinner();
+		$.ajax({
+			type: "POST",
+			url: "{% url 'kosakata/delete_kosakata' %}",
+			dataType: 'json',
+			data: {id : id_kosakata},
+		})
+		.done(function(response) {
+			kamus_datatable.ajax.reload();
+		})
+	});
+
+
+	$(document).on('click', 'button#show_import_modal', function(e) {
+		$("#kosakata_modal").modal('hide');
+		$("#import_modal").modal('show');
+	});
+
+	$(document).on('submit', 'form#kosakata_form', function(e) {
+		showSpinner();
+		e.preventDefault();
+		var data = $(this).serialize();
+		var id_kosakata = $("input#id").val();
+		var url = generate_url(id_kosakata)
+		$.ajax({
+			type: "POST",
+			url: url,
+			dataType: 'json',
+			data: data,
+		})
+		.done(function(response) {
+			if (response.success == true) {
+
+				clean_kosakata_form();
+				$("#kosakata_modal").modal('hide');
 				kamus_datatable.ajax.reload();
-			})
+				hideSpinner();
+			}
 		});
+	});
 
+	$(document).on('submit', 'form#import_form', function(e) {
+		showSpinner();
+		e.preventDefault();
+		var data = new FormData(this);
 
-		$(document).on('click', 'button#show_import_modal', function(e) {
-			$("#kosakata_modal").modal('hide');
-			$("#import_modal").modal('show');
+		var url = "{% url 'kosakata/import_kosakata' %}"
+		$.ajax({
+			type: "POST",
+			url: url,
+			dataType: 'json',
+			data: data,
+			cache: false,
+			contentType: false,
+			processData: false
 		})
-
-		$(document).on('submit', 'form#kosakata_form', function(e) {
-			e.preventDefault();
-
-			var data = $(this).serialize();
-			var id_kosakata = $("input#id").val();
-			var url = generate_url(id_kosakata)
-			$.ajax({
-				type: "POST",
-				url: url,
-				dataType: 'json',
-				data: data,
-			})
-			.done(function(response) {
-				if (response.success == true) {
-
-					clean_kosakata_form();
-					$("#kosakata_modal").modal('hide');
-					kamus_datatable.ajax.reload();
-				}
-			});
+		.done(function(response) {
+			if (response.success == true) {
+				$("#import_modal").modal('hide');
+				$("input#file").val('');
+				kamus_datatable.ajax.reload();
+			}
 		})
-
-		$(document).on('submit', 'form#import_form', function(e) {
-			e.preventDefault();
-			alert('importing');
-			var data = new FormData(this);
-
-			var url = "{% url 'kosakata/import_kosakata' %}"
-			$.ajax({
-				type: "POST",
-				url: url,
-				dataType: 'json',
-				data: data,
-				cache: false,
-				contentType: false,
-				processData: false
-			})
-			.done(function(response) {
-				if (response.success == true) {
-					$("#import_modal").modal('hide');
-					$("input#file").val('');
-					kamus_datatable.ajax.reload();
-				}
-				alert('done');
-			});
-		})
-
-
-		kamus_datatable = $("#kosakata_table").DataTable({
-			"ajax": {
-				"url": "{% url 'kosakata/json_kosakata' %}",
-				"dataSrc": ""
-			},
-			"columns": [
-			{ "data": "id" },
-			{ "data": "kata" },
-			{ "data": "arti_kata" },
-			{ "data": null },
-			],
-			"columnDefs": [ {
-				"targets": -1,
-				"data": null,
-				"render" : function(data, type, row) {
-					return render_edit_delete_button(row['id'])
-				}
-			} ]
-
+		.always(function() {
+			hideSpinner();
 		});
 	});
 
 
-	function clean_kosakata_form() {
-		$("input#id").val('');
-		$("input#kata").val('');
-		$("input#arti_kata").val('');
-	}
-	function generate_url(id) {
-		var url = "{% url 'kosakata/insert_kosakata' %}";
-		if (id) {
-			url = "{% url 'kosakata/update_kosakata' %}";
+	kamus_datatable = $("#kosakata_table").DataTable({
+		"ajax": {
+			"url": "{% url 'kosakata/json_kosakata' %}",
+			"dataSrc": ""
+		},
+		"columns": [
+		{ "data": "id" },
+		{ "data": "kata" },
+		{ "data": "arti_kata" },
+		{ "data": null },
+		],
+		"columnDefs": [ {
+			"targets": -1,
+			"data": null,
+			"render" : function(data, type, row) {
+				return render_edit_delete_button(row['id'])
+			}
+		} ],
+		'preDrawCallback': function(settings) {
+			showSpinner();
+		},
+		'drawCallback': function(settings) {
+			hideSpinner();
 		}
-		return url
+
+	});
+});
+
+
+function clean_kosakata_form() {
+	$("input#id").val('');
+	$("input#kata").val('');
+	$("input#arti_kata").val('');
+}
+function generate_url(id) {
+	var url = "{% url 'kosakata/insert_kosakata' %}";
+	if (id) {
+		url = "{% url 'kosakata/update_kosakata' %}";
 	}
-	function render_edit_delete_button(id) {
-		var button_edit = '<button type="button" class="show_modal_edit btn btn-warning" data-id="'+id+'">Edit</button>';
-		var button_delete = '<button type="button" class="show_modal_delete btn btn-danger" data-id="'+id+'">Delete</button>';
-		html = button_edit + " "+ button_delete;
-		return html
-	}
+	return url
+}
+function render_edit_delete_button(id) {
+	var button_edit = '<button type="button" class="show_modal_edit btn btn-warning" data-id="'+id+'">Edit</button>';
+	var button_delete = '<button type="button" class="show_modal_delete btn btn-danger" data-id="'+id+'">Delete</button>';
+	html = button_edit + " "+ button_delete;
+	return html
+}
 </script>
 {% endblock import-js %}
