@@ -29,6 +29,7 @@ class Preprocessing:
         cleaned = sentence
         self._cleaned_sentence = cleaned
         return cleaned
+    
 
     def get_case_folded(self):
         return self._case_folded

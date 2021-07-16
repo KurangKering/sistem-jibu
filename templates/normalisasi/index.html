@@ -2,12 +2,12 @@
 {% load static %}
 {% block import-css %}
 <style>
-	
-	#data_uji_table tr th:last-child, #data_uji_table tr td:last-child{
-		white-space: nowrap;
-		width: 1%;
-	}
-	
+
+#data_uji_table tr th:last-child, #data_uji_table tr td:last-child{
+	white-space: nowrap;
+	width: 1%;
+}
+
 </style>
 {% endblock import-css %}
 {% block content %}
@@ -34,7 +34,7 @@
 									<tr>
 										<th>Id</th>
 										<th>Cleaned Data</th>
-										<th>Normalized Data</th>
+										<th>Action</th>
 									</tr>
 								</thead>
 							</table>
@@ -46,27 +46,190 @@
 	</div>
 </div>
 
+<div class="modal fade" tabindex="-1" id="modalLarge">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Hasil Damerau Levenshtein</h5>
+				<a href="#" class="close" data-dismiss="modal" aria-label="Close">
+					<em class="icon ni ni-cross"></em>
+				</a>
+			</div>
+			<div class="modal-body">
+				<div class="card card-success">
+					<div class="card-header">
+						<h3 class="card-title">Kesimpulan</h3>
+					</div>
+					<form class="form-horizontal">
+						<input type="hidden" name="id_data_uji" id="id_data_uji">
+						<div class="card-body">
+							<div class="form-group row">
+								<label for="input1" class="col-sm-2 col-form-label">ID data uji:</label>
+								<div class="col-sm-10">
+									<input type="text" readonly class="form-control-plaintext" id="id_data_uji">
 
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="input1" class="col-sm-2 col-form-label">Cleaned Input:</label>
+								<div class="col-sm-10">
+									<input type="text" readonly class="form-control-plaintext" id="cleaned_data">
+
+								</div>
+							</div>
+
+						</div>
+					</form>
+				</div>
+
+				<div class="card card-success">
+					<div class="card-header">
+						<h3 class="card-title">Hasil Damerau Levenshtein</h3>
+					</div>
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Kata</th>
+								<th>C</th>
+								<th>Jarak</th>
+							</tr>
+						</thead>
+						<tbody class="table" id="levenshtein_table">
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-outline-primary option" data-option="prev">Data sebelumnya</button>
+				<button class="btn btn-outline-primary option" data-option="next">Data selanjutnya</button>
+			</div>
+
+		</div>
+	</div>
+</div>
 {% endblock content %}
 {% block import-js %}
 <script>
+let current_id = "";
+$(document).ready(function() {
 
-	$(document).ready(function() {
 
-		data_uji_datatable = $("#data_uji_table").DataTable({
-			"ajax": {
-				"url": "{% url 'normalisasi/bulk_normalize' %}",
-				"dataSrc": "normalized_data"
-			},
-			"columns": [
-			{ "title": "id" },
-			{ "title": "cleaned_data" },
-			{ "title": "normalized_data" },
-			],
-			
+	$(document).on('click', 'button.show_modal_normalisasi', function(e) {
+		current_id = $(this).data('id');
 
-		});
+		params = {
+			id : current_id,
+			option : 'direct'
+		};
+		normalize_data(params);
 	});
+
+	$(document).on('click', 'button.option', function(e) {
+		var option = $(this).data('option');
+		params = {
+			id : current_id,
+			option : option
+		};
+		normalize_data(params);
+		$('#modalLarge').animate({ scrollTop: 0 }, 'slow');
+	});
+
+	data_uji_datatable = $("#data_uji_table").DataTable({
+		"ajax": {
+			"url": "{% url 'data_uji/json_data_uji' %}",
+			"dataSrc": ""
+		},
+		"columns": [
+		{ "data": "id" },
+		{ "data": "stemmed_data" },
+		{ "data": null },
+		],
+		"columnDefs": [ {
+			"targets": -1,
+			"data": null,
+			"render" : function(data, type, row) {
+				return render_normalisasi_button(row['id'])
+			}
+		} ]
+
+	});
+});
+
+function normalize_data(params) {
+	id_data_uji = params.id;
+	option = params.option;
+
+	$.ajax({
+		url: "{% url 'normalisasi/ajax_normalize' %}",
+		type: 'POST',
+		dataType: 'json',
+		data: {id: id_data_uji, option: option},
+	})
+	.done(function(response) {
+		if (response.success == false) {
+			alert('tidak ada data lg');
+			return;
+		}
+		$("input#cleaned_data").val(response.cleaned_input);
+		$("input#id_data_uji").val(response.id_data_uji);
+		current_id = response.id_data_uji;
+		table_levenshtein = $("#levenshtein_table");
+		table_levenshtein.empty();
+
+		for (index in response.inputan_levenshtein) {
+			data = response.inputan_levenshtein[index];
+
+			let tr = $("<tr/>");
+			let rowspan = data[2] != 1 ? data[2] : 2;
+
+			tr.append($("<td/>", {
+				text 	: data[0],
+				rowspan : rowspan,
+			}));
+
+			table_levenshtein.append(tr);
+
+
+			let tr2 = "";
+
+			if (Object.keys(data[1]) == false) {
+				tr2 = $("<tr/>");
+				tr2.append($("<td/>", {
+					text :"-",
+				}))
+				.append($("<td/>", {
+					text :"-",
+				}));
+				table_levenshtein.append(tr2);
+
+			}
+			else {
+				for (levenshtein in data[1]) {
+					tr2 = $("<tr/>");
+					tr2.append($("<td/>", {
+						text :levenshtein,
+					}))
+					.append($("<td/>", {
+						text :data[1][levenshtein],
+					}));
+
+					table_levenshtein.append(tr2);
+
+				}
+			}
+		}
+
+
+		$("#modalLarge").modal('show');
+	});
+}
+
+function render_normalisasi_button(id) {
+	var button_normalisasi = '<button type="button" class="show_modal_normalisasi btn btn-info" data-id="'+id+'">Normalisasi</button>';
+	html = button_normalisasi;
+	return html
+}
 
 </script>
 {% endblock import-js %}

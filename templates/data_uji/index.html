@@ -35,7 +35,7 @@
 								<thead>
 									<tr>
 										<th>Id</th>
-										<th>Raw data</th>
+										<th>Data</th>
 										<th>Action</th>
 									</tr>
 								</thead>
@@ -113,6 +113,12 @@
 	</div>
 	<!-- /.modal-dialog -->
 </div>
+<template  id="render-action-button-template">
+	<div class="btn-group">
+		<button type="button" class="btn btn-outline-secondary show_modal_edit" data-id="place_here"><i class="fas fa-edit"></i></button>
+		<button type="button" class="btn btn-outline-danger show_modal_delete" data-id="place_here" ><i class="fas fa-trash"></i></button>
+	</div>
+</template>
 {% endblock content %}
 {% block import-js %}
 <script>
@@ -232,7 +238,7 @@ $(document).ready(function() {
 			"targets": -1,
 			"data": null,
 			"render" : function(data, type, row) {
-				return render_edit_delete_button(row['id'])
+				return render_edit_delete_button2(row['id'])
 			}
 		} ]
 
@@ -256,6 +262,15 @@ function render_edit_delete_button(id) {
 	var button_delete = '<button type="button" class="show_modal_delete btn btn-danger" data-id="'+id+'">Delete</button>';
 	html = button_edit + " "+ button_delete;
 	return html
+}
+
+function render_edit_delete_button2(id) {
+	let tmpl = $("#render-action-button-template").html();
+	tmpl = tmpl.replace('place_here', id);
+	tmpl = tmpl.replace('place_here', id);
+
+	return tmpl;
+
 }
 </script>
 {% endblock import-js %}

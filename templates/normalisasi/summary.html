@@ -2,9 +2,9 @@
 
 {% block content %}
 <style>
-	.scrollme {
-		overflow-x: auto;
-	}
+.scrollme {
+	overflow-x: auto;
+}
 </style>
 <div class="content-wrapper">
 	<div class="content-header">
@@ -46,6 +46,9 @@
 						</div>
 						<form class="form-horizontal">
 							<div class="card-body">
+								
+								
+								
 								<div class="form-group row">
 									<label for="input1" class="col-sm-2 col-form-label">Input:</label>
 									<div class="col-sm-10">
@@ -60,12 +63,8 @@
 
 									</div>
 								</div>
-								<div class="form-group row">
-									<label for="output" class="col-sm-2 col-form-label">Output:</label>
-									<div class="col-sm-10">
-										<input type="text" readonly class="form-control-plaintext" id="output" value="{{ output }}">
-									</div>
-								</div>
+
+								
 
 
 							</div>
@@ -86,9 +85,9 @@
 								</tr>
 							</thead>
 							<tbody class="table">
-								{% for input, damerau,jumlah in inputan_damerau %}
+								{% for input, levenshtein,jumlah in inputan_levenshtein %}
 								<tr>
-									<td 
+									<td
 									{% if jumlah != 1 %}
 									rowspan="{{ jumlah }}"
 									{% else %}
@@ -96,10 +95,10 @@
 
 									{% endif %}
 									>{{ input }}</td>
-									{% for dam,val in damerau.items %}
+									{% for dam,val in levenshtein.items %}
 									<tr>
 										<td>{{ dam }}</td>
-										<td>{{ val }}</td>	
+										<td>{{ val }}</td>
 									</tr>
 									{% empty%}
 									<tr>
@@ -119,74 +118,7 @@
 							</tbody>
 						</table>
 					</div>
-					<div class="card card-success">
-						<div class="card-header">
-							<h3 class="card-title">Probability & Score</h3>
-						</div>
-						<div class="table-responsive">
-							<table class="table">
-								<thead>
-									<tr>
-										<th>Kata</th>
-										<th>C</th>
-										<th>Bi kiri</th>
-										<th>Bi Kanan</th>
-										<th>Tri</th>
-										<th>Prob kiri</th>
-										<th>Prob kanan</th>
-										<th>Prob Tri</th>
-										<th>Score</th>
-									</tr>
-								</thead>
-								<tbody class="table">
-									{% for jumlah, input, freq_gram in hasil_gram %}
-									<tr>
-										<td  
-										{% if jumlah != 1 %}
-										rowspan="{{ jumlah }}"
-										{% else %}
-										rowspan="2"
-
-										{% endif %}
-
-										>{{ input }}</td>
-										{% for v in freq_gram %}
-										<tr>
-											<td>{{ v.0 }}</td>
-											<td>{{ v.1 }}</td>
-											<td>{{ v.2 }}</td>
-											<td>{{ v.3 }}</td>
-											<td>{{ v.4 }}</td>
-											<td>{{ v.5 }}</td>
-											<td>{{ v.6 }}</td>
-											<td>{{ v.7|floatformat:4 }}</td>
-										</tr>
-
-										{% empty %}
-										<tr>
-											<td>-</td>
-											<td>-</td>
-											<td>-</td>
-											<td>-</td>
-											<td>-</td>
-											<td>-</td>
-											<td>-</td>
-										</tr>
-										{% endfor %}
-
-
-									</tr>
-									{% endfor %}
-
-
-
-
-
-								</tbody>
-							</table>
-						</div>
-					</div>
-
+					
 
 				</div>
 

@@ -1,14 +1,16 @@
 import jellyfish
-
+import time
 class DamerauLevenshtein:
 
     _dict = None
     _max_op = 1
 
     def execute(self, dictionary, sentence):
+        start = time.time()
         self._dict = dictionary
         result = self.process(sentence)
-        print(result)
+        stop = time.time()
+        print(f'waktu eksekusi : {stop - start}')
         return result
 
     def process(self, text):
@@ -27,21 +29,24 @@ class DamerauLevenshtein:
         if proceed == []:
             return result
 
-        result = {k: v for k, v in proceed if v <= self._max_op}
+        condition = True
+        count = 0
+        while (condition):
+            result = {k: v for k, v in proceed if v == count}
+
+            condition = (result == {}) and (count < self._max_op)
+            count = count + 1
 
         return result
 
     def real_process(self, word):
 
         output = []
-        # checked_word = [x for x in self._dict.as_list() if x.startswith(word[0])]
-        panjang_word = len(word)
-        batas_kecil = panjang_word - self._max_op
-        batas_besar = panjang_word + self._max_op  
-
-        checked_word = [x for x in self._dict if len(x) >= batas_kecil and len(x) <= batas_besar]
+        batas_bawah = len(word) - self._max_op
+        batas_atas = len(word) + self._max_op
+        checked_word = {x:x for x in self._dict if len(x) >= batas_bawah and len(x) <= batas_atas }
         for dict_word in checked_word:
-            num_of_process = self.singular_damerau(word, dict_word)
+            num_of_process = self.singular_levenshtein(word, dict_word)
             if num_of_process is None:
                 continue
             temp = (dict_word, num_of_process)
@@ -51,10 +56,7 @@ class DamerauLevenshtein:
 
         return output
 
-    def singular_damerau(self, word1, word2):
+    def singular_levenshtein(self, word1, word2):
         num = jellyfish.damerau_levenshtein_distance(word1, word2)
         return num
 
-
-class CachedDamerauLevenshtein(DamerauLevenshtein):
-    pass

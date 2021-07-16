@@ -1,9 +1,9 @@
-from .normalizer import BasicNormalizer
+from .normalizer import DamerauNormalizer
 
 
 class NormalisasiFactory:
 
     def create_basic_normalizer(self, dictionary):
 
-        basic =  BasicNormalizer(dictionary)
+        basic =  DamerauNormalizer(dictionary)
         return basic

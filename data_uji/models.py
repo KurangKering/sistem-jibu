@@ -5,3 +5,4 @@ from django.db import models
 class DataUji(models.Model):
     raw_data = models.TextField()
     cleaned_data = models.TextField(blank=True, null=True)
+    stemmed_data = models.TextField(blank=True, null=True)

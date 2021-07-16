@@ -37,3 +37,6 @@ class DatabaseDictionary(object):
     def as_list(self):
         return self.words
 
+    def as_dict(self):
+        return {x:x for x in self.words}
+
