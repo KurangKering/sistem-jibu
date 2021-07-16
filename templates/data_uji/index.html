@@ -155,15 +155,39 @@ $(document).ready(function() {
 
 	$(document).on('click', 'button.show_modal_delete', function(e) {
 		var id_data_uji = $(this).data('id');
-		$.ajax({
-			type: "POST",
-			url: "{% url 'data_uji/delete_data_uji' %}",
-			dataType: 'json',
-			data: {id : id_data_uji},
+
+		Swal.fire({
+			icon : 'warning',
+			title : 'Hapus data',
+			text : 'Yakin ingin menghapus data?',
+			allowOutsideClick: false,
+			showCancelButton: true,
+			confirmButtonText: 'Hapus',
+			cancelButtonText: 'Jangan',
+
 		})
-		.done(function(response) {
-			data_uji_datatable.ajax.reload();
-		})
+		.then((res) => {
+			if (res.value) {
+				$.ajax({
+					type: "POST",
+					url: "{% url 'data_uji/delete_data_uji' %}",
+					dataType: 'json',
+					data: {id : id_data_uji},
+				})
+				.done(function(response) {
+					if (!response.success) {
+
+					} else {
+						data_uji_datatable.ajax.reload(null, false);
+						Swal.fire({icon: 'success', showConfirmButton: false, timer: 1000})
+					}
+				})
+
+				
+			}
+		} );
+
+		
 	});
 
 
@@ -175,7 +199,7 @@ $(document).ready(function() {
 
 	$(document).on('submit', 'form#data_uji_form', function(e) {
 		e.preventDefault();
-
+		showSpinner();
 		var data = $(this).serialize();
 		var id_data_uji = $("input#id").val();
 		url = generate_url(id_data_uji)
@@ -190,8 +214,14 @@ $(document).ready(function() {
 
 				clean_data_uji_form();
 				$("#data_uji_modal").modal('hide');
-				data_uji_datatable.ajax.reload();
+				data_uji_datatable.ajax.reload(null, false);
+				Swal.fire({icon: 'success', showConfirmButton: false, timer: 1000})
+
 			}
+		})
+		.always(function(){
+			hideSpinner()
+
 		});
 	})
 
@@ -215,7 +245,7 @@ $(document).ready(function() {
 			if (response.success == true) {
 				$("#import_modal").modal('hide');
 				$("input#file").val('');
-				data_uji_datatable.ajax.reload();
+				data_uji_datatable.ajax.reload(null, false);
 			}
 		})
 		.always(function() {
@@ -225,11 +255,11 @@ $(document).ready(function() {
 
 
 	data_uji_datatable = $("#data_uji_table").DataTable({
-		"ajax": {
-			"url": "{% url 'data_uji/json_data_uji' %}",
-			"dataSrc": ""
-		},
+		"processing": true,
+		"serverSide": true,
+		"ajax": "{% url 'data_uji/datatables_datauji' %}",
 		"columns": [
+
 		{ "data": "id" },
 		{ "data": "raw_data" },
 		{ "data": null },
@@ -237,8 +267,9 @@ $(document).ready(function() {
 		"columnDefs": [ {
 			"targets": -1,
 			"data": null,
+			"sortable": false,
 			"render" : function(data, type, row) {
-				return render_edit_delete_button2(row['id'])
+				return render_edit_delete_button2(row['id']);
 			}
 		} ]
 

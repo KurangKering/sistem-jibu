@@ -1,5 +1,5 @@
 from django.urls import path
-
+from sistem.datatables_view import DataUjiDataTables
 from . import views
 
 urlpatterns = [
@@ -11,4 +11,5 @@ urlpatterns = [
     path('delete_data_uji', views.delete_data_uji, name="data_uji/delete_data_uji"),
     path('import_data_uji', views.import_data_uji, name="data_uji/import_data_uji"),
     path('json_single_data_uji', views.json_single_data_uji, name="data_uji/json_single_data_uji"),
+    path('datatables_datauji', DataUjiDataTables.as_view(), name="data_uji/datatables_datauji"),
 ]

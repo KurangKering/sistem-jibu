@@ -1,5 +1,5 @@
 from django.urls import path
-
+from sistem.datatables_view import KosakataDataTables
 from . import views
 
 urlpatterns = [
@@ -11,4 +11,5 @@ urlpatterns = [
     path('delete_kosakata', views.delete_kosakata, name="kosakata/delete_kosakata"),
     path('import_kosakata', views.import_kosakata, name="kosakata/import_kosakata"),
     path('json_single_kosakata', views.json_single_kosakata, name="kosakata/json_single_kosakata"),
+    path('datatables_kosakata', KosakataDataTables.as_view(), name="kosakata/datatables_kosakata"),
 ]
