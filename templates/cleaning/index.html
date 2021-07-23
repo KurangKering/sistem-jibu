@@ -2,12 +2,12 @@
 {% load static %}
 {% block import-css %}
 <style>
-	
-	#data_uji_table tr th:last-child, #data_uji_table tr td:last-child{
-		white-space: nowrap;
-		width: 1%;
-	}
-	
+
+#data_uji_table tr th:last-child, #data_uji_table tr td:last-child{
+	white-space: nowrap;
+	width: 1%;
+}
+
 </style>
 {% endblock import-css %}
 {% block content %}
@@ -51,22 +51,37 @@
 {% block import-js %}
 <script>
 
-	$(document).ready(function() {
+$(document).ready(function() {
+	var data_uji_datatable = null;
+	showSpinner();
+	$.ajax({
+		url: "{% url 'cleaning/cleaning' %}",
+		type: 'GET',
+		dataType: 'json',
+	})
+	.done(function(response) {
+		if (response.success) {
 
-		data_uji_datatable = $("#data_uji_table").DataTable({
-			"ajax": {
-				"url": "{% url 'cleaning/cleaning' %}",
-				"dataSrc": "cleaned_data_uji"
-			},
-			"columns": [
-			{ "data": "id" },
-			{ "data": "raw_data" },
-			{ "data": "cleaned_data" },
-			],
-			
+			data_uji_datatable = $("#data_uji_table").DataTable({
+				"processing": true,
+				"serverSide": true,
+				"ajax": "{% url 'data_uji/datatables_datauji' %}",
+				"columns": [
 
-		});
-	});
+				{ "data": "id" },
+				{ "data": "raw_data" },
+				{ "data": "stemmed_data" },
+				],
+
+			});
+		}
+
+	})
+	.always(function() {
+		hideSpinner();
+	})
+	
+});
 
 </script>
 {% endblock import-js %}

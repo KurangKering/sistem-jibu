@@ -9,8 +9,21 @@ from library.algorithms.stemming.Dictionary.ModelDatabase import ModelDatabase
 
 
 def index(request):
+    updates_raw_data_uji = DataUji.objects.all().in_bulk()
+    factory_stemmer = StemmerFactory()
+    kamusDatabase = ModelDatabase(Kosakata, 'kata')
+    stemmer = factory_stemmer.create_stemmer(False, kamusDatabase)
+
+    for key, data_uji in updates_raw_data_uji.items():
+        cleaned_data = Preprocessing(data_uji.raw_data)
+        cleaned_data = cleaned_data.get_cleaned_sentence()
+        data_uji.cleaned_data = cleaned_data
+        data_uji.stemmed_data = stemmer.stem(cleaned_data)
+
+    updated = DataUji.objects.bulk_update(updates_raw_data_uji.values(), ['cleaned_data', 'stemmed_data'], batch_size=100)
 
     return render(request, 'cleaning/index.html')
+
 
 def cleaning(request):
     updates_raw_data_uji = DataUji.objects.all().in_bulk()
@@ -26,16 +39,9 @@ def cleaning(request):
 
     updated = DataUji.objects.bulk_update(updates_raw_data_uji.values(), ['cleaned_data', 'stemmed_data'], batch_size=100)
 
-    cleaned_data_uji = DataUji.objects.all().values()
-    cleaned_data_uji_list = []
-    if (len(cleaned_data_uji) > 0):
-        cleaned_data_uji_list = list(cleaned_data_uji)
-
-
-
+    
     output = {
         'success': True,
-        'cleaned_data_uji': cleaned_data_uji_list,
     }
 
     return JsonResponse(output, safe=False)

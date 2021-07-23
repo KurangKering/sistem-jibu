@@ -136,11 +136,11 @@ $(document).ready(function() {
 	});
 
 	data_uji_datatable = $("#data_uji_table").DataTable({
-		"ajax": {
-			"url": "{% url 'data_uji/json_data_uji' %}",
-			"dataSrc": ""
-		},
+		"processing": true,
+		"serverSide": true,
+		"ajax": "{% url 'data_uji/datatables_datauji' %}",
 		"columns": [
+
 		{ "data": "id" },
 		{ "data": "stemmed_data" },
 		{ "data": null },
@@ -152,7 +152,6 @@ $(document).ready(function() {
 				return render_normalisasi_button(row['id'])
 			}
 		} ]
-
 	});
 });
 
