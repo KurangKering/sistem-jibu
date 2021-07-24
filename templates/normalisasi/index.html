@@ -16,7 +16,7 @@
 		<div class="container-fluid">
 			<div class="row mb-2">
 				<div class="col-sm-6">
-					<h1>Data Normalisasi</h1>
+					<h4>Data Normalisasi</h4>
 				</div>
 				
 
@@ -33,7 +33,7 @@
 								<thead>
 									<tr>
 										<th>Id</th>
-										<th>Cleaned Data</th>
+										<th>Stemmed Data</th>
 										<th>Action</th>
 									</tr>
 								</thead>
@@ -71,7 +71,7 @@
 								</div>
 							</div>
 							<div class="form-group row">
-								<label for="input1" class="col-sm-2 col-form-label">Cleaned Input:</label>
+								<label for="input1" class="col-sm-2 col-form-label">Teks:</label>
 								<div class="col-sm-10">
 									<input type="text" readonly class="form-control-plaintext" id="cleaned_data">
 
@@ -101,8 +101,8 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button class="btn btn-outline-primary option" data-option="prev">Data sebelumnya</button>
-				<button class="btn btn-outline-primary option" data-option="next">Data selanjutnya</button>
+				<button class="btn btn-outline-primary option" data-option="prev"><</button>
+				<button class="btn btn-outline-primary option" data-option="next">></button>
 			</div>
 
 		</div>
@@ -158,7 +158,7 @@ $(document).ready(function() {
 function normalize_data(params) {
 	id_data_uji = params.id;
 	option = params.option;
-
+	showSpinner();
 	$.ajax({
 		url: "{% url 'normalisasi/ajax_normalize' %}",
 		type: 'POST',
@@ -167,7 +167,15 @@ function normalize_data(params) {
 	})
 	.done(function(response) {
 		if (response.success == false) {
-			alert('tidak ada data lg');
+			Swal.fire({
+				icon : 'warning',
+				title : 'Tidak ada data',
+				allowOutsideClick: false,
+				showCancelButton: false,
+				timer:1000,
+				showConfirmButton: false,
+
+			})
 			return;
 		}
 		$("input#cleaned_data").val(response.cleaned_input);
@@ -221,11 +229,14 @@ function normalize_data(params) {
 
 
 		$("#modalLarge").modal('show');
-	});
+	})
+	.always(function() {
+		hideSpinner();
+	})
 }
 
 function render_normalisasi_button(id) {
-	var button_normalisasi = '<button type="button" class="show_modal_normalisasi btn btn-info" data-id="'+id+'">Normalisasi</button>';
+	var button_normalisasi = '<button type="button" class="show_modal_normalisasi btn btn-primary" data-id="'+id+'">Normalisasi</button>';
 	html = button_normalisasi;
 	return html
 }

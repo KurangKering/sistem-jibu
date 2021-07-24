@@ -8,6 +8,9 @@ from library.algorithms.factory import NormalisasiFactory
 from library.algorithms.dictionary import DefaultDictionary, DatabaseDictionary
 from data_uji.models import DataUji
 from django.views.decorators.csrf import csrf_exempt
+from library.algorithms.stemming.Stemmer.StemmerFactory import StemmerFactory
+
+from library.algorithms.stemming.Dictionary.ModelDatabase import ModelDatabase
 
 # from old_libraries.algorithms import *
 
@@ -45,7 +48,17 @@ def normalize(request):
     if raw_inputan == "":
         return redirect(index)
 
-    content = reusable_normalize(raw_inputan)
+
+    preprocessed_object = Preprocessing(raw_inputan)
+    factory_stemmer = StemmerFactory()
+    kamusDatabase = ModelDatabase(Kosakata, 'kata')
+    stemmer = factory_stemmer.create_stemmer(False, kamusDatabase)
+    cleaned_data = preprocessed_object.get_cleaned_sentence()
+    stemmed_data = stemmer.stem(cleaned_data)
+    content = reusable_normalize(stemmed_data)
+    content['input'] = raw_inputan
+    content['stemmed_data'] = stemmed_data
+
     content['inputan_levenshtein'] = zip(content['array_cleaned_sentence'], content['hasil_levensthein'], content['jumlah_levenshtein'])
 
     return render(request, 'normalisasi/summary.html', content)
@@ -89,12 +102,11 @@ def ajax_normalize(request):
     return JsonResponse(content, safe=False)
 
 
-def reusable_normalize(raw_inputan):
+def reusable_normalize(inputan):
 
-    preprocessed_object = Preprocessing(raw_inputan)
     factory = NormalisasiFactory()
     normalizer = factory.create_basic_normalizer(DatabaseDictionary(Kosakata, 'kata'))
-    hasil_normalisasi = normalizer.normalisasi(preprocessed_object.get_cleaned_sentence())
+    hasil_normalisasi = normalizer.normalisasi(inputan)
 
     hasil_levensthein = hasil_normalisasi.get_C_number()
     jumlah_levenshtein = [len(x)+1 for x in hasil_levensthein]
@@ -103,7 +115,6 @@ def reusable_normalize(raw_inputan):
 
 
     content = {
-        'input':raw_inputan,
         'cleaned_input': cleaned_sentence,
         'array_cleaned_sentence': array_cleaned_sentence,
         'hasil_levensthein': hasil_levensthein,

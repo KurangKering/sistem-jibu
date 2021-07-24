@@ -16,10 +16,10 @@
 		<div class="container-fluid">
 			<div class="row mb-2">
 				<div class="col-sm-6">
-					<h1>Daftar Data Uji</h1>
+					<h4>Daftar Data Uji</h4>
 				</div>
 				<div class="col-sm-6">
-					<button type="button" id="show_modal_insert" class="btn btn-primary float-right">Tambah Data Uji</button>
+					<button type="button" id="show_modal_insert" class="btn btn-outline-primary float-right"><i class="fas fa-plus"></i> Tambah Data Uji</button>
 				</div>
 
 			</div>
@@ -67,10 +67,12 @@
 					</div>
 					<div class="text-center">
 						<button type="submit" class="btn btn-block btn-primary mb-3">Simpan Data</button>
-						<p>ATAU</p>
 					</div>
 				</form>
-				<button class="btn btn-info btn-block" id="show_import_modal">Import File Excel</button>
+				<div class="import-content">
+					<p class="text-center">ATAU</p>
+					<button class="btn btn-info btn-block" id="show_import_modal">Import File Excel</button>
+				</div>
 			</div>
 			
 		</div>
@@ -127,6 +129,7 @@ $(document).ready(function() {
 
 	$(document).on('click', 'button#show_modal_insert', function() {
 		$("#data_uji_modal .modal-title").text('Tambah Data Uji');
+		$(".import-content").show();
 		clean_data_uji_form();
 		$("#wrapper_show_button").show();
 		$("#data_uji_modal").modal('show');
@@ -135,6 +138,7 @@ $(document).ready(function() {
 
 	$(document).on('click', 'button.show_modal_edit', function(e) {
 		var id_data_uji = $(this).data('id');
+		$(".import-content").hide();
 		$.ajax({
 			url: "{% url 'data_uji/json_single_data_uji' %}",
 			type: 'POST',

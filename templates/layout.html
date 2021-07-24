@@ -73,12 +73,34 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
   <link rel="stylesheet" href="{% static 'plugins/spinjs/spin.css' %}">
   <link href="{% static 'plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css' %}" rel="stylesheet">
+  <style>
 
+  
+  </style>
   {% block import-css %}
   
   {% endblock import-css %}
   <!-- Theme style -->
   <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+  <style>
+  .content-header {
+    padding-top: 25px !important;
+    padding-right: .5rem;
+    padding-left: .5rem;
+    padding: 15px;
+    padding-top: 15px;
+
+  } 
+
+
+  .judul-besar {
+    font-size: 28px;
+    padding-top: 0px;
+    margin-bottom: 0px;
+    letter-spacing: .3rem;
+
+  }
+  </style>
 </head>
 <body class="hold-transition sidebar-mini">
   <div class="wrapper">
@@ -90,9 +112,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <li class="nav-item">
           <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
-        
-        
       </ul>
+
+      <div class="ml-auto">
+        <p class="judul-besar">SISTEM NORMALISASI BAHASA MAKASSAR</p>
+      </div>
 
       <!-- Right navbar links -->
       <ul class="navbar-nav ml-auto">
@@ -110,16 +134,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </li>
         
       </ul>
+
+      
     </nav>
     <!-- /.navbar -->
 
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
-      <a href="{% static 'index3.html' %}" class="brand-link">
-        <img src="{% static 'dist/img/AdminLTELogo.png' %}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">Normalisasi</span>
+      <a href="{% url 'index' %}" class="brand-link" style="border-bottom:none">
+        <span class="brand-text font-weight-light">&nbsp;</span>
       </a>
+
 
       <!-- Sidebar -->
       <div class="sidebar">
@@ -137,15 +163,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
            
            <li class="nav-item">
             <a href="{% url 'index' %}" class="nav-link">
-              <i class="nav-icon fas fa-circle"></i>
+              <i class="nav-icon fas fa-square"></i>
               <p>
-                Dashboard
+                Homepage
               </p>
             </a>
           </li>        
           <li class="nav-item">
             <a href="{% url 'kosakata/index' %}" class="nav-link">
-              <i class="nav-icon fas fa-circle"></i>
+              <i class="nav-icon fas fa-square"></i>
               <p>
                 Kamus
               </p>
@@ -153,7 +179,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </li>
           <li class="nav-item">
             <a href="{% url 'data_uji/index' %}" class="nav-link">
-              <i class="nav-icon fas fa-circle"></i>
+              <i class="nav-icon fas fa-square"></i>
               <p>
                 Data Uji
               </p>
@@ -161,28 +187,29 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </li>
           <li class="nav-item">
             <a href="{% url 'cleaning/index' %}" class="nav-link">
-              <i class="nav-icon fas fa-circle"></i>
+              <i class="nav-icon fas fa-square"></i>
               <p>
                 Cleaning
               </p>
             </a>
           </li>
           <li class="nav-item">
+            <a href="{% url 'normalisasi/index' %}" class="nav-link">
+              <i class="nav-icon fas fa-square"></i>
+              <p>
+                Normalisasi Data Uji
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="{% url 'normalisasi/perhitungan' %}" class="nav-link">
-              <i class="nav-icon fas fa-circle"></i>
+              <i class="nav-icon fas fa-square"></i>
               <p>
                 Perhitungan
               </p>
             </a>
           </li>
-          <li class="nav-item">
-            <a href="{% url 'normalisasi/index' %}" class="nav-link">
-              <i class="nav-icon fas fa-circle"></i>
-              <p>
-                Pengujian
-              </p>
-            </a>
-          </li>
+          
           
         </ul>
       </nav>
@@ -208,14 +235,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- /.control-sidebar -->
 
   <!-- Main Footer -->
-  <footer class="main-footer">
-    <!-- To the right -->
-    <div class="float-right d-none d-sm-inline">
-      Anything you want
-    </div>
-    <!-- Default to the left -->
-    All rights reserved.
-  </footer>
 </div>
 <!-- ./wrapper -->
 
